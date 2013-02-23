@@ -24,10 +24,7 @@
         <activity
             android:name="edu.ufl.brainless.PauseActivity"
             android:label="@string/title_activity_pause"
-            android:parentActivityName="edu.ufl.brainless.GameActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ufl.brainless.GameActivity" />
+            android:parentActivityName="activity_game">
         </activity>
     </application>
 

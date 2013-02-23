@@ -61,6 +61,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 			else if (event.getY() < 50) {
 				Intent in = new Intent((Activity)getContext(), PauseActivity.class);
 				Log.d(TAG, "Starting PauseActivity.");
+				thread.setRunning(false);
 				((Activity)getContext()).startActivity(in);				
 			}
 			else {

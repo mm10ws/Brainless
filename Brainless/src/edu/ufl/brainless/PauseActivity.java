@@ -19,16 +19,17 @@ public class PauseActivity extends Activity {
 		setContentView(R.layout.activity_pause);
 		// Show the Up button in the action bar.
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
-		/*
+		
 		Button b = (Button) findViewById(R.id.button1);
 		
 		b.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
+		    	Log.d(TAG, "Exiting PauseActivity.");
 		        returnGame(v);
 		    }
 		});
-		*/
+		
 		
 	}
 
