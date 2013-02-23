@@ -22,7 +22,9 @@ public class GameActivity extends Activity {
         // make game full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // set GamePanel as the View
-        setContentView(new GamePanel(this));
+        //setContentView(new GamePanel(this));
+        setContentView(R.layout.activity_game);
+        //panel = (GamePanel) findViewById(R.id.surfaceView); ??
         Log.d(TAG, "View added");
     }
     
@@ -43,4 +45,6 @@ public class GameActivity extends Activity {
         Log.d(TAG, "Stopping...");
         super.onStop();
     }
+    
+    
 }

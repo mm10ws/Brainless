@@ -25,7 +25,6 @@ public class PauseActivity extends Activity {
 		b.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-		    	Log.d(TAG, "Exiting PauseActivity.");
 		        returnGame(v);
 		    }
 		});

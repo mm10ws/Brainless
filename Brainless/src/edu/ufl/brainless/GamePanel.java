@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,6 +17,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private GameThread thread;
 	
 	public GamePanel(Context context) {
+		super(context);
+		
+		// adding callback(this) to the surface holder to intercept events
+		getHolder().addCallback(this);
+		
+		thread = new GameThread(getHolder(), this);
+		
+		// make the GamePanel focusable so it can handle events
+		setFocusable(true);
+	}
+	
+	public GamePanel(Context context, AttributeSet attrs) {	
 		super(context);
 		
 		// adding callback(this) to the surface holder to intercept events
