@@ -10,6 +10,8 @@ public class GameThread extends Thread {
 	private SurfaceHolder surfaceHolder;
 	private GamePanel gamePanel;
 	private boolean running;
+	long tickCount = 0L;
+	
 	public void setRunning(boolean running) {
 		this.running = running;
 	}	
@@ -23,8 +25,7 @@ public class GameThread extends Thread {
 	@Override
 	public void run() {
 		while (running) {
-			long tickCount = 0L;
-			Log.d(TAG, "Starting game loop");
+			Log.d(TAG, "Starting game loop. tickCount = " + tickCount);
 			while (running) {
 				tickCount++;
 				// update level

@@ -15,6 +15,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = GameThread.class.getSimpleName();
 	
 	private GameThread thread;
+	public int changeTest = 0;
 	
 	public GamePanel(Context context) {
 		super(context);
@@ -92,10 +93,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void pauseGame() {
 		Intent in = new Intent((Activity)getContext(), PauseActivity.class);
 		Log.d(TAG, "Starting PauseActivity.");
-		thread.setRunning(false);
+		//thread.setRunning(false);
 		((Activity)getContext()).startActivity(in);	
 	}
-	public void setRunning() {
-		thread.setRunning(true);
+	public void setRunning(boolean status) {
+		thread.setRunning(status);
 	}
 }

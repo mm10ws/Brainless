@@ -47,6 +47,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onPause() {
     	Log.d(TAG, "Pausing...");
+    	panel.setRunning(false);
     	super.onPause();
     }
 
@@ -62,7 +63,7 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
         panel = (GamePanel) findViewById(R.id.gamepanel);
         Log.d(TAG, "View added");
-        panel.setRunning();
+        panel.setRunning(true);
         super.onRestart();
         Button b = (Button) findViewById(R.id.button1);
     	b.setText(bString);
@@ -71,15 +72,20 @@ public class GameActivity extends Activity {
     public void pauseGame(View v) {
     	panel = (GamePanel) findViewById(R.id.gamepanel);
         if(panel instanceof GamePanel) {Log.d(TAG, "GamePanel found.");}
-    	panel.pauseGame();	
+        panel.setRunning(false);
+        panel.pauseGame();	
     }
     
     public void changeText(View v) {
-    	Button b = (Button) findViewById(R.id.button1);
+    	Button b = (Button) findViewById(R.id.button1);	
     	if(bString.equals("Changed.")) { bString = "Reverted.";}
     	else { bString = "Changed.";}
     	b.setText(bString);
     	Log.d(TAG,"Text Changed.");
+    	panel = (GamePanel) findViewById(R.id.gamepanel);
+    	panel.changeTest++;
+        if(panel instanceof GamePanel) {Log.d(TAG, "GamePanel found. changeTest = " + panel.changeTest);}
+        
     }
     
     
