@@ -1,23 +1,36 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
     
     <edu.ufl.brainless.GamePanel
+        android:id="@+id/gamepanel"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
     
     <RelativeLayout
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    	<Button
-       		android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:layout_centerHorizontal="true"
-        	android:layout_centerVertical="true"
-        	android:text="@string/hello_world"
-        	tools:context=".GameActivity" />
-    	</RelativeLayout>
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:onClick="pauseGame"
+            android:text="@string/hello_world"
+            tools:context=".GameActivity" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:text="Button"
+            android:onClick="changeText" />
+    </RelativeLayout>
 
 </FrameLayout>

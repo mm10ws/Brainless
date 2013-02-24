@@ -29,7 +29,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	
 	public GamePanel(Context context, AttributeSet attrs) {	
-		super(context);
+		super(context, attrs);
 		
 		// adding callback(this) to the surface holder to intercept events
 		getHolder().addCallback(this);
@@ -88,5 +88,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		
+	}
+	public void pauseGame() {
+		Intent in = new Intent((Activity)getContext(), PauseActivity.class);
+		Log.d(TAG, "Starting PauseActivity.");
+		thread.setRunning(false);
+		((Activity)getContext()).startActivity(in);	
+	}
+	public void setRunning() {
+		thread.setRunning(true);
 	}
 }
