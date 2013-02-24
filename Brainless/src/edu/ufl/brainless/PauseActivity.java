@@ -1,6 +1,7 @@
 package edu.ufl.brainless;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -20,15 +21,47 @@ public class PauseActivity extends Activity {
 		// Show the Up button in the action bar.
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
 		
-		Button b = (Button) findViewById(R.id.button1);
+		// Resume
+		Button b1 = (Button) findViewById(R.id.button1);
 		
-		b.setOnClickListener(new View.OnClickListener() {
+		b1.setOnClickListener(new View.OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
+		    	Log.d(TAG, "Selected Resume.");
+		    	Intent returnIntent = new Intent();
+		    	returnIntent.putExtra("choice", "resume");
+		    	setResult(Activity.RESULT_OK, returnIntent);
 		        returnGame(v);
 		    }
 		});
 		
+		// Restart
+		Button b2 = (Button) findViewById(R.id.button2);
+		
+		b2.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+		    	Log.d(TAG, "Selected Resume.");
+		    	Intent returnIntent = new Intent();
+		    	returnIntent.putExtra("choice", "restart");
+		    	setResult(Activity.RESULT_OK, returnIntent);
+		        returnGame(v);
+		    }
+		});
+		
+		// Quit
+		Button b3 = (Button) findViewById(R.id.button3);
+				
+		b3.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Selected Resume.");
+				Intent returnIntent = new Intent();
+				returnIntent.putExtra("choice", "quit");
+				setResult(Activity.RESULT_OK, returnIntent);
+				returnGame(v);
+			}
+		});
 		
 	}
 

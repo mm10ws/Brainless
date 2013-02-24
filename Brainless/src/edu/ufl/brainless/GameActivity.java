@@ -58,6 +58,38 @@ public class GameActivity extends Activity {
     }
     
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	Log.d(TAG, "Request Code: " + requestCode);
+    	switch (requestCode) {
+    		case 1010:
+    			if(resultCode != Activity.RESULT_OK) {Log.d(TAG, "resultCode != RESULT_OK.");}
+    			if(resultCode == Activity.RESULT_OK) {
+    				Log.d(TAG, "resultCode == RESULT_OK. data.getStringExtra(\"choice\") = " + data.getStringExtra("choice"));
+    				if(data.getStringExtra("choice").equals("resume")) {
+    					Log.d(TAG, "Pause menu called resume.");
+    					onRestart();
+    				}
+    				else if(data.getStringExtra("choice").equals("restart")) {
+    					// Call custom function
+    					Log.d(TAG, "Pause menu called restart.");
+    					bString = "Button.";
+    					onRestart();
+    					
+    				}
+    				else if(data.getStringExtra("choice").equals("quit")) {
+    					// Call custom function
+    					Log.d(TAG, "Pause menu called exit.");
+    					panel = (GamePanel) findViewById(R.id.gamepanel);
+    			        if(panel instanceof GamePanel) {Log.d(TAG, "GamePanel found.");}
+    					panel.endGame();
+    				}
+    			}
+    		default: break;		
+    	}
+    	
+    }
+    
+    @Override
     protected void onRestart() {
         Log.d(TAG, "Restarting...");
         setContentView(R.layout.activity_game);
