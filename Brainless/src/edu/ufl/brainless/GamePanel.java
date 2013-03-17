@@ -3,7 +3,12 @@ package edu.ufl.brainless;
 import android.util.Log;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -13,7 +18,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = GameThread.class.getSimpleName();
 	
 	private GameThread thread;
-	private InputManager inManager;
 	
 	public GamePanel(Context context) {
 		super(context);
@@ -25,8 +29,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		
 		// make the GamePanel focusable so it can handle events
 		setFocusable(true);
-		
-		
 	}
 	
 	@Override
@@ -53,32 +55,32 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 	
-	public InputManager createInputManager() {
-		// Create InputManager
-		 inManager = new InputManager(this);
-		 Log.d(TAG, "Screen size: " + getWidth() + "x" + getHeight() + ".");
-		 return inManager;
-	}
-	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (event.getY() > getHeight() - 50) {
-				thread.setRunning(false);
-				((Activity)getContext()).finish();
-			} else {
-				Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
-				inManager.passEvent(event);
-			}
-		}
-		
+		thread.addEventToHud(event);
+		//Log.d(TAG, "Event passed to HUD");
+		int action = event.getAction() & MotionEvent.ACTION_MASK;
+        
+        switch (action) {
+        case MotionEvent.ACTION_DOWN:
+        case MotionEvent.ACTION_POINTER_DOWN:  
+        	//Log.d(TAG, "ACTION_DOWN");
+        	return true;
+        case MotionEvent.ACTION_UP:        
+        case MotionEvent.ACTION_POINTER_UP:
+        	//Log.d(TAG, "ACTION_UP");
+        	return true;
+        case MotionEvent.ACTION_CANCEL:
+            Log.d(TAG, "ACTION_CANCEL");
+            return true;
+        case MotionEvent.ACTION_MOVE:
+        	return true;
+        }
 		return super.onTouchEvent(event);
 	}
 	
 	@Override
-	protected void onDraw(Canvas canvas) {
-		Log.d(TAG, "Drawing...");
-		
-		super.onDraw(canvas);
+	public void onDraw(Canvas canvas) {
+		canvas.drawColor(Color.WHITE);
 	}
 }
