@@ -93,8 +93,9 @@ public class Player extends Actor {
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
 		if(hud.isStickPressed())
 			super.update();
-		if(hud.isButtonPressed())
+		/*if(hud.isButtonPressed())
 			Log.d(TAG,"Button Pressed");
+			*/
 		
 		// Check if player is outside of screen
 		if (position.X < 0)

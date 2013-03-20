@@ -42,6 +42,9 @@ public class GameThread extends Thread {
 				level.update(hud);
 				draw(c);
 			}
+			catch(IllegalArgumentException e) {
+				//Log.d(TAG, e.toString());
+			}
 			finally {
 				surfaceHolder.unlockCanvasAndPost(c);
 			}

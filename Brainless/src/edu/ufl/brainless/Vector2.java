@@ -48,6 +48,11 @@ public class Vector2 {
 		X /= norm;
 		Y /= norm;
 	}
+	public void Normalize(float magnitude) {
+		float norm = (float)Math.sqrt(Math.pow(X,2) + Math.pow(Y,2));
+		X = X * magnitude / norm;
+		Y = Y * magnitude / norm;
+	}
 	
 	public float Length() {
 		return (float)Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
