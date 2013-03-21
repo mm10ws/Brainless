@@ -57,41 +57,33 @@ public class HUD {
 		int action = event.getAction() & MotionEvent.ACTION_MASK;
         int pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
         int pointerId = event.getPointerId(pointerIndex);
-		try{
-		       
-        switch (action) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_POINTER_DOWN:
-        	isPointerStickInput(event, pointerId);
-        	buttonPointers[pointerId] = isPointerButtonInput(event, pointerId);    
-        	//Log.d(TAG, "ACTION_DOWN");
-            break;
-        case MotionEvent.ACTION_UP:        
-        case MotionEvent.ACTION_POINTER_UP:
-        	if(stickPointerId == pointerId)
-        		stickPointerId = -1;
-        	buttonPointers[pointerId] = false;
-        	//Log.d(TAG, "ACTION_UP " + pointerId + stickPointerId);
-        	break;
-        case MotionEvent.ACTION_CANCEL:
-            buttonPointers[pointerId] = false;
-            stickPointerId = -1;
-            //Log.d(TAG, "ACTION_CANCEL");
-            break;
-        case MotionEvent.ACTION_MOVE:
-        	//Log.d(TAG, "ACTION_MOVE");
-        	isPointerStickInput(event, pointerIndex);
-        	buttonPointers[pointerId] = isPointerButtonInput(event, pointerIndex);
-        	
-        	if(stickPointerId >= 0) {
-        		
-        	}
-            break;
+        
+        try{
+	        switch (action) {
+	        	case MotionEvent.ACTION_DOWN:
+	        	case MotionEvent.ACTION_POINTER_DOWN:
+	        		isPointerStickInput(event, pointerId);
+	        		buttonPointers[pointerId] = isPointerButtonInput(event, pointerId);    
+	        		break;
+	        	case MotionEvent.ACTION_UP:        
+	        	case MotionEvent.ACTION_POINTER_UP:
+	        		if(stickPointerId == pointerId)
+	        			stickPointerId = -1;
+	        		buttonPointers[pointerId] = false;
+	        		break;
+		        case MotionEvent.ACTION_CANCEL:
+		            buttonPointers[pointerId] = false;
+		            stickPointerId = -1;
+		            break;
+		        case MotionEvent.ACTION_MOVE:
+		        	isPointerStickInput(event, pointerIndex);
+		        	buttonPointers[pointerId] = isPointerButtonInput(event, pointerIndex);
+		            break;
+			}
         }
-		}
-		catch(IllegalArgumentException e) {
-			Log.d(TAG, "ILLEGAL_ARGUMENT_EXCEPTION");			
-		}
+        catch(IllegalArgumentException e) {
+        	Log.d(TAG, e.toString());
+        }
 	}
 	
 	private boolean isPointerStickInput(MotionEvent event, int pointerIndex) {
@@ -139,6 +131,7 @@ public class HUD {
 	}
 	
 	public void update() {
+		//Stick
 		int stickPointerIndex = 0;
 		if(event != null && isStickPressed())  {
 			if(event.getPointerCount() > 1)
@@ -154,6 +147,7 @@ public class HUD {
 		else
 			resetHUD();
 		
+		//Button
 		if(isButtonPressed())
 			button.LoadBitmap(ResourceManager.getBitmap(R.drawable.button_pressed));
 		else
