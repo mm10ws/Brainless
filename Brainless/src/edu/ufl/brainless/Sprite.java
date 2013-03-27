@@ -69,6 +69,12 @@ public class Sprite {
 		return new Vector2(position.X + rect.width/2, position.Y + rect.height/2);
 	}
 	
+	// to remove a sprite from the canvas
+	public void clear(){
+		//The sprite to be erased from the canvas.
+		this.texture.recycle();
+	}
+	
 	public void draw(Canvas canvas) {
 		Matrix matrix = new Matrix();		
 		matrix.postRotate(angle,rect.width/2,rect.height/2);

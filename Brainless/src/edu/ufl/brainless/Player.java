@@ -81,11 +81,32 @@ public class Player extends Actor {
 			this.death();
 		}
 	}
+	
+	public void collision(Enemy x){
+		this.setIsDead(true);
 
+	}
+	
 	public void death(){
 		if (this.isDead()){
 			// TODO execute enemy death
 		}		
+	}
+	
+	public void update(Vector2 direction) {
+		this.direction = direction;
+		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
+		super.update();
+
+		// Check if player is outside of screen
+		if (position.X < 0)
+			position.X = 0;
+		else if (position.X > 800 - rect.width)
+			position.X = 800 - rect.width;
+		if (position.Y < 0)
+			position.Y = 0;
+		else if (position.Y > 480 - rect.height)
+			position.Y = 480 - rect.height;
 	}
 	
 	public void update(HUD hud) {
