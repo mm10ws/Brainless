@@ -23,5 +23,13 @@ public class Actor extends Sprite {
 	public void update() {
 		position.X += direction.X * speed;
 		position.Y += direction.Y * speed;
+		this.rect.X=position.X;
+		this.rect.Y=position.Y;
 	}
+	
+	//level manager detected a collision
+		public void collision(Actor x){
+
+		}
+		
 }

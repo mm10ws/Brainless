@@ -2,6 +2,7 @@ package edu.ufl.brainless;
 
 import java.util.ArrayList;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -40,7 +41,7 @@ public class Level extends HUD {
 	public void update(Vector2 playerDirection) {
 
 		player.update(playerDirection);
-		//enemy.update(player.position);
+		enemy.update(player.position);
 		collisionCheck();
 		if(player.isDead())
 			restart();
@@ -88,5 +89,12 @@ public class Level extends HUD {
 	
 	public void draw(Canvas canvas) {
 		player.draw(canvas);
+		enemy.draw(canvas);
+		healthBar.draw(canvas);
+		if (mode == GAMEOVER){
+			Level.drawGameOverScreen(canvas, 500f, 900f);
+			//mode = WAITING_FOR_SURFACE;
+			bites = 0;
+		}
 	}
 }

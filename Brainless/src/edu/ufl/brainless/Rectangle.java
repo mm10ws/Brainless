@@ -1,5 +1,7 @@
 package edu.ufl.brainless;
 
+import android.util.Log;
+
 public class Rectangle {
 	public float X;
 	public float Y;
@@ -20,6 +22,20 @@ public class Rectangle {
 		this.height = height;
 	}
 	
+	
+	public  boolean Intersects(Rectangle a, Rectangle b) {
+		//Log.d(TAG,"player"+a.X+","+a.Y);
+		//Log.d(TAG,"enemy"+b.X+","+b.Y);
+		if((a.X-b.X)<50)
+			if(a.Y-b.Y<50)
+				return true;
+		return false;
+
+
+	}
+	
+	
+	/*
 	public static boolean Intersects(Rectangle a, Rectangle b) {
 		if (a.X + a.width > b.X && b.X + b.width > a.X)
 			if (a.Y + a.height > b.Y && b.Y + b.height > a.Y)
@@ -28,4 +44,5 @@ public class Rectangle {
 		else
 			return false;
 	}
+	*/
 }
