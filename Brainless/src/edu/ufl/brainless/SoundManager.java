@@ -18,15 +18,15 @@ public class SoundManager {
 	private static Context context;
 	private static MediaPlayer mediaPlayer;
 	private static HashMap<Integer, Uri> mediaPlayerMap;
-	
+
 	private SoundManager()	{ }
-	
+
 	static synchronized public SoundManager getInstance() {
 		if (_instance == null)
 			_instance = new SoundManager();
 		return _instance;
 	}
-	
+
 	public static void initSounds(Context theContext) {
 		context = theContext;
 		soundPool = new SoundPool(8, AudioManager.STREAM_MUSIC, 0);
@@ -36,11 +36,11 @@ public class SoundManager {
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mediaPlayerMap = new HashMap<Integer, Uri>();
 	}
-	
+
 	public static void addSound(int index, int soundID) {
 		soundPoolMap.put(index, soundPool.load(context, soundID, 1));
 	}
-	
+
 	/**
 	 * Adds short audio files to the soundPool map for use.
 	 */
@@ -48,7 +48,7 @@ public class SoundManager {
 		addSound(1, R.raw.pistol);
 		addSound(2, R.raw.submachine);
 	}
-	
+
 	/**
 	 * 
 	 * @param index - the key of the desired sound in the soundPoolMap 
@@ -64,12 +64,12 @@ public class SoundManager {
 			soundPool.play(soundPoolMap.get(index), streamVolume, streamVolume, 1, 0, speed);
 		//Log.d("SoundManager", "Play sound " + index);
 	}
-	
+
 	public static void stopSound(int index)
 	{
 		soundPool.stop(soundPoolMap.get(index));
 	}
-		
+
 	/**
 	 * Creates a Uri object used to identify files for MediaPlayer
 	 */
@@ -77,14 +77,14 @@ public class SoundManager {
 		Uri media = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + path);
 		mediaPlayerMap.put(index, media);
 	}
-	
+
 	/**
 	 * Adds longer audio files to mediaPlayer map for future use
 	 */
 	public static void loadMedia() {
 		addMedia(1, "test_theme");
 	}	
-	
+
 	/**
 	 * playMedia(int index) sets a new data source for the mediaPlayer with Uri from mediaPlayerMap,
 	 * prepares the mediaPlayer once set, and then starts it.
@@ -104,28 +104,28 @@ public class SoundManager {
 			Log.d("SoundManager", "Unable to play media file");
 		}
 	}
-	
+
 	/**
 	 * Pauses playback of the mediaPlayer.
 	 */
 	public static void pauseMedia() {
 		mediaPlayer.pause();
 	}
-	
+
 	/**
 	 * Resumes playing from where the mediaPlayer was paused.
 	 */
 	public static void resumeMedia() {
 		mediaPlayer.start();
 	}
-	
+
 	/**
 	 * Resets the mediaPlayer so that a new file can be loaded into the player.
 	 */
 	public static void resetMedia() {
 		mediaPlayer.reset();
 	}
-		
+
 	public static void cleanup() {
 		soundPool.release();
 		soundPool = null;

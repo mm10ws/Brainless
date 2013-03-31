@@ -22,7 +22,7 @@ public class Enemy extends Actor {
 		this.health = health;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public void update(Vector2 player){
 		Log.d(TAG, "enemy position "+position.X+" "+position.Y);
 		this.direction.X=player.X-this.position.X;
@@ -75,5 +75,5 @@ public class Enemy extends Actor {
 			// TODO execute enemy death
 		}		
 	}
-	
+
 }

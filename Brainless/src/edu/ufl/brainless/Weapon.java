@@ -1,5 +1,7 @@
 package edu.ufl.brainless;
 
+import java.util.ArrayList;
+
 public class Weapon extends Item {
 	int ammoRemaining;
 	final int constAmmoInClip; //keep track of original number of bullets in clip
@@ -7,6 +9,7 @@ public class Weapon extends Item {
 	int numberOfClips;
 	int reloadTime;	
 	int weaponDamage;
+	public ArrayList<Bullet> bullet = new ArrayList<Bullet>();//1
 	private static final String TAG = Weapon.class.getSimpleName();
 
 	//constructors
@@ -73,6 +76,27 @@ public class Weapon extends Item {
 	}
 
 	//shoot and reload methods
+	public boolean shoot(float x, float y, float angle, Vector2 direction, float speed){
+		if (this.ammoRemaining == 0){			
+			return false;
+		}		
+		else if(this.ammoRemaining != 0 && this.ammoInClip == 0){
+			this.reload();
+			return false;
+		}
+		else{
+			SoundManager.playSound(1, 1.0f, false);
+			Bullet b1 = new Bullet(ResourceManager.getBitmap(R.drawable.bullet),x, y,angle,direction,speed);//1
+			bullet.add(b1);						
+			this.ammoRemaining --;
+			this.ammoInClip --;
+			if(this.ammoRemaining == 0){
+				this.numberOfClips = 0;
+			}
+			return true;			
+		}
+	}	
+	/*
 	public boolean shoot(){
 		if (this.ammoRemaining == 0){			
 			return false;
@@ -82,7 +106,9 @@ public class Weapon extends Item {
 			return false;
 		}
 		else{
-			//TODO implement shooting
+			SoundManager.playSound(1, 1.0f, false);
+			Bullet b1 = new Bullet(ResourceManager.getBitmap(R.drawable.bullet),x, y,angle,direction,speed);//1
+			bullet.add(b1);						
 			this.ammoRemaining --;
 			this.ammoInClip --;
 			if(this.ammoRemaining == 0){
@@ -90,15 +116,10 @@ public class Weapon extends Item {
 			}
 			return true;			
 		}
-	}	
+	}
+	*/	
 
 	public void reload(){
-		try {
-		    Thread.sleep(reloadTime*1000); //Is this is the right way to pause for reload? Hope this doesn't pause the entire game.
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
-
 		this.numberOfClips --;
 		this.ammoInClip = constAmmoInClip;
 	}

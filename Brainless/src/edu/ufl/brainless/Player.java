@@ -9,7 +9,8 @@ import android.view.WindowManager;
 public class Player extends Actor {
 	private int health; // health of player ranges from 0 to 100
 	private boolean isDead;
-	private Weapon heldWeapon;
+	protected Weapon heldWeapon;
+	int delay = 30;
 
 	private static final String TAG = Player.class.getSimpleName();
 
@@ -20,7 +21,7 @@ public class Player extends Actor {
 		isDead = false;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public Player(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) { // default constructor
 		super(texture, x, y, angle, direction, speed);
 		heldWeapon = new Weapon();
@@ -36,7 +37,7 @@ public class Player extends Actor {
 		this.health = health;
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	// getters and setters
 	public int getHealth(){
 		return health;
@@ -53,11 +54,11 @@ public class Player extends Actor {
 	public void setIsDead(boolean isDead){
 		this.isDead = isDead;
 	}
-	
+
 	public Weapon getWeapon() {
 		return heldWeapon;
 	}
-	
+
 	public void setWeapon(Weapon weapon) {
 		this.heldWeapon = weapon;
 	}
@@ -81,18 +82,18 @@ public class Player extends Actor {
 			this.death();
 		}
 	}
-	
+
 	public void collision(Enemy x){
 		this.setIsDead(true);
 
 	}
-	
+
 	public void death(){
 		if (this.isDead()){
 			// TODO execute enemy death
 		}		
 	}
-	
+
 	public void update(Vector2 direction) {
 		this.direction = direction;
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
@@ -108,18 +109,24 @@ public class Player extends Actor {
 		else if (position.Y > 480 - rect.height)
 			position.Y = 480 - rect.height;
 	}
-	
+
 	public void update(HUD hud) {
 		direction = hud.getPlayerDirection();
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
 		if (hud.isStickPressed())
 			super.update();
-		
-		if (hud.isButtonPressed()) {
-			// fire weapon
-			SoundManager.playSound(1, 1.0f, false);
+
+		if (hud.isButtonPressed() && delay <= 0) {
+			// fire weapon			
+			this.heldWeapon.shoot(position.X, position.Y, angle, new Vector2(direction.X,direction.Y),10f); //1
+			this.delay = 30;
+			//SoundManager.playSound(1, 1.0f, false);
 		}
-		
+
+		else{
+			delay--;
+		}	
+
 		// Check if player is outside of screen
 		if (position.X < 0)
 			position.X = 0;
