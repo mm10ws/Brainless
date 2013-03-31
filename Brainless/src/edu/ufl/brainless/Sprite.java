@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.util.Log;
 
 public class Sprite {
 	
@@ -44,18 +45,14 @@ public class Sprite {
 		texture = BitmapFactory.decodeResource(res, R.drawable.player);
 		rect.width = texture.getWidth();
 		rect.height = texture.getHeight();
-	}
-	
-	public void LoadBitmap(Bitmap texture) {
-		this.texture = texture;
-		rect.width = texture.getWidth();
-		rect.height = texture.getHeight();
+		
 	}
 	
 	public void update() {
 		angle += 1f;
 		if (angle > 360)
 			angle = 0;
+		
 	}
 	
 	// moves position to be centered around parameter pos

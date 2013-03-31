@@ -21,7 +21,13 @@ public class Enemy extends Actor {
 		this.health = health;
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	/*public void update(Vector2 player){
+		super.update();
+		this.direction.X=this.position.X-player.X;
+		this.direction.Y=this.position.Y-player.Y;
+	}
+*/
 	// getters and setters
 	public int getHealth(){
 		return health;
@@ -59,9 +65,14 @@ public class Enemy extends Actor {
 		}
 	}
 
+	
+	
+	
+	
 	public void death(){
 		if (this.isDead()){
 			// TODO execute enemy death
 		}		
 	}
+	
 }

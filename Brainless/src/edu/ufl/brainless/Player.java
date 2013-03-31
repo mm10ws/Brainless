@@ -2,7 +2,6 @@ package edu.ufl.brainless;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -64,12 +63,7 @@ public class Player extends Actor {
 
 	//death and damage methods
 	public boolean isDead(){
-		if(this.isDead == true){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return this.isDead;
 	}
 
 	public void inflictDamage(int DamageAmount){
@@ -82,22 +76,20 @@ public class Player extends Actor {
 		}
 	}
 
+	public void collision(Enemy x){
+		this.setIsDead(true);
+		
+	}
 	public void death(){
 		if (this.isDead()){
 			// TODO execute enemy death
 		}		
 	}
 	
-	public void update(HUD hud) {
-		direction = hud.getPlayerDirection();
+	public void update(Vector2 direction) {
+		this.direction = direction;
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
-		if (hud.isStickPressed())
-			super.update();
-		
-		if (hud.isButtonPressed()) {
-			// fire weapon
-			SoundManager.playSound(1, 1.0f, false);
-		}
+		super.update();
 		
 		// Check if player is outside of screen
 		if (position.X < 0)

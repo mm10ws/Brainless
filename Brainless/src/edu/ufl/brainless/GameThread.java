@@ -31,26 +31,24 @@ public class GameThread extends Thread {
 	public void run() {
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
-		SoundManager.playMedia(1);
 		while (running) {			
 			Canvas c = null;
 			try {
 				c = surfaceHolder.lockCanvas();
 				tickCount++;
 				hud.update();
-				level.update(hud);
+				level.update(hud.getPlayerDirection());
 				draw(c);
+				
+				
+				
 			}
-			catch(IllegalArgumentException e) {
-				//Log.d(TAG, e.toString());
-			}
+			
 			finally {
 				surfaceHolder.unlockCanvasAndPost(c);
 			}
 		}
 		Log.d(TAG, "Game loop executed " + tickCount + " times");
-		SoundManager.pauseMedia();
-    	SoundManager.resetMedia();
 	}
 	
 	public void addEventToHud(MotionEvent event) {
@@ -62,7 +60,7 @@ public class GameThread extends Thread {
 	}
 	
 	public void draw(Canvas canvas) {		
-		gamePanel.onDraw(canvas);
+		gamePanel.draw(canvas);
 		level.draw(canvas);
 		hud.draw(canvas);
 	}

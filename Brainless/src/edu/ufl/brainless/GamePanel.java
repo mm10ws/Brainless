@@ -18,9 +18,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static final String TAG = GameThread.class.getSimpleName();
 	
 	private GameThread thread;
-	
+	Context context;
 	public GamePanel(Context context) {
 		super(context);
+		this.context=context;
 		
 		// adding callback(this) to the surface holder to intercept events
 		getHolder().addCallback(this);
@@ -57,24 +58,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		thread.addEventToHud(event);
-		int action = event.getAction() & MotionEvent.ACTION_MASK;
-		
-		switch (action) {
-        case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_POINTER_DOWN:  
-        	//Log.d(TAG, "ACTION_DOWN");
-        	return true;
-        case MotionEvent.ACTION_UP:        
-        case MotionEvent.ACTION_POINTER_UP:
-        	//Log.d(TAG, "ACTION_UP");
-        	return true;
-        case MotionEvent.ACTION_CANCEL:
-            Log.d(TAG, "ACTION_CANCEL");
-            return true;
-        case MotionEvent.ACTION_MOVE:
-        	return true;
-        }
+		if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+			thread.addEventToHud(event);
+			Log.d(TAG, "Coords: x=" + event.getX() + ",y=" + event.getY());
+			//thread.setRunning(false);
+			//((Activity)getContext()).finish();
+		}
+		else if (event.getAction() == MotionEvent.ACTION_UP)
+			thread.removeEventFromHud();
 		
 		return super.onTouchEvent(event);
 	}
@@ -83,4 +74,5 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	public void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 	}
+	
 }
