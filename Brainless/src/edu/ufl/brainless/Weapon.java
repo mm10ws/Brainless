@@ -11,6 +11,7 @@ public class Weapon extends Item {
 	int weaponDamage;
 	public ArrayList<Bullet> bullet = new ArrayList<Bullet>();//1
 	private static final String TAG = Weapon.class.getSimpleName();
+	protected Bullet b1;
 
 	//constructors
 	public Weapon(){ // default constructor
@@ -87,28 +88,9 @@ public class Weapon extends Item {
 		else{
 			SoundManager.playSound(1, 1.0f, false);
 			Bullet b1 = new Bullet(ResourceManager.getBitmap(R.drawable.bullet),x, y,angle,direction,speed);//1
-			bullet.add(b1);						
-			this.ammoRemaining --;
-			this.ammoInClip --;
-			if(this.ammoRemaining == 0){
-				this.numberOfClips = 0;
-			}
-			return true;			
-		}
-	}	
-	/*
-	public boolean shoot(){
-		if (this.ammoRemaining == 0){			
-			return false;
-		}		
-		else if(this.ammoRemaining != 0 && this.ammoInClip == 0){
-			this.reload();
-			return false;
-		}
-		else{
-			SoundManager.playSound(1, 1.0f, false);
-			Bullet b1 = new Bullet(ResourceManager.getBitmap(R.drawable.bullet),x, y,angle,direction,speed);//1
-			bullet.add(b1);						
+			bullet.add(b1);
+			//added this line for collision with bullet.
+			//((Actor) b1).update();
 			this.ammoRemaining --;
 			this.ammoInClip --;
 			if(this.ammoRemaining == 0){
@@ -117,7 +99,6 @@ public class Weapon extends Item {
 			return true;			
 		}
 	}
-	*/	
 
 	public void reload(){
 		this.numberOfClips --;
