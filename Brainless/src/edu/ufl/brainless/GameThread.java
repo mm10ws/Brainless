@@ -39,7 +39,7 @@ public class GameThread extends Thread {
 			try {
 				c = surfaceHolder.lockCanvas();
 				tickCount++;
-				hud.update();
+				//hud.update();
 				//if changed to level.update(hud.getPlayerDirection()); the
 				level.update(hud);
 				draw(c);

@@ -115,10 +115,16 @@ public class Player extends Actor {
 		// update player movement
 		direction = hud.getPlayerDirection();
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
-		if (hud.isStickPressed()) {
+		if(hud.isPlayerMoving() == HUD.TILT) {
+			position.X += direction.X * 0;
+			position.Y += direction.Y * 0;
+			this.rect.X=position.X;
+			this.rect.Y=position.Y;
 			//checkDirection(angle);
-			Log.d(TAG, "Player superclass updated\n");
+		}
+		else if(hud.isPlayerMoving() == HUD.MOVE) {
 			super.update();
+			//checkDirection(angle);
 		}
 		
 		// Check if player is outside of screen

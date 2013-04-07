@@ -38,6 +38,9 @@ public class HUD {
 
 	private int stickPointerId = -1;
 	private boolean[] buttonPointers = new boolean[10];
+	public static final int MOVE = 2;
+	public static final int TILT = 1;
+	public static final int NEUTRAL = 0;
 
 	public HUD() {
 		stick = new Sprite(ResourceManager.getBitmap(R.drawable.stick_foreground), 45, 355, 0);
@@ -70,8 +73,10 @@ public class HUD {
 					break;
 				case MotionEvent.ACTION_UP:
 				case MotionEvent.ACTION_POINTER_UP:
-					if(stickPointerId == pointerId)
+					if(stickPointerId == pointerId) {
 						stickPointerId = -1;
+						resetHUD();
+					}
 					buttonPointers[pointerId] = false;
 					break;
 				case MotionEvent.ACTION_CANCEL:
@@ -81,6 +86,8 @@ public class HUD {
 				case MotionEvent.ACTION_MOVE:
 					isPointerStickInput(event, pointerIndex);
 					buttonPointers[pointerId] = isPointerButtonInput(event, pointerIndex);
+					if(!checkForHeldStick())
+						resetHUD();
 					break;
 			}
 		}
@@ -107,6 +114,24 @@ public class HUD {
 		}
 		return result;
 	}
+	
+	private boolean checkForHeldStick() {
+		boolean result = false;
+		int stickPointerIndex = 0;
+		if(event != null && isStickPressed()) {
+			if (event.getPointerCount() > 1)
+				stickPointerIndex = event.findPointerIndex(stickPointerIndex);
+			Vector2 stickVector = new Vector2(event.getX(stickPointerIndex), event.getY(stickPointerIndex));
+			if (Vector2.Distance(stickBackground.getCenter(), stickVector) > moveRadius) {
+				stickVector = Vector2.Subtract(stickVector, stickBackground.getCenter());
+				stickVector.Normalize(moveRadius);
+				stickVector = Vector2.Add(stickVector, stickBackground.getCenter());
+			}
+			stick.setCenter(stickVector);
+			result = true;
+		}
+		return result;
+	}
 
 	public boolean isStickPressed() {
 		return stickPointerId > -1;
@@ -120,23 +145,11 @@ public class HUD {
 		}
 		return result;
 	}
+	/*
 
 	// calls updateCheckPointer for each pointer in event
 	public void update() {
-		int stickPointerIndex = 0;
-		if(event != null && isStickPressed()) {
-			if (event.getPointerCount() > 1)
-				stickPointerIndex = event.findPointerIndex(stickPointerIndex);
-			Vector2 stickVector = new Vector2(event.getX(stickPointerIndex), event.getY(stickPointerIndex));
-			if (Vector2.Distance(stickBackground.getCenter(), stickVector) > moveRadius) {
-				stickVector = Vector2.Subtract(stickVector, stickBackground.getCenter());
-				stickVector.Normalize(moveRadius);
-				stickVector = Vector2.Add(stickVector, stickBackground.getCenter());
-			}
-			stick.setCenter(stickVector);
-		}
-		else
-			resetHUD();
+		
 
 		if (isButtonPressed()) {
 			// load pressed button image
@@ -145,9 +158,20 @@ public class HUD {
 			// load default button image
 		}
 	}
+	*/
 
 	public void resetHUD() {
 		stick.setCenter(stickBackground.getCenter());
+	}
+	
+	public int isPlayerMoving() {
+		int result = NEUTRAL;
+		if(isStickPressed()) {
+			float distance = Vector2.Distance(stickBackground.getCenter(), stick.getCenter());
+			if(distance < tiltRadius) result = TILT;
+			else result = MOVE;
+		}
+		return result;
 	}
 
 	public Vector2 getPlayerDirection() {

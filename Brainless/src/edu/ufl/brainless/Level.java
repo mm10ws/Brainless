@@ -88,7 +88,7 @@ public class Level extends HUD {
 	}
 	
 	public void collisionCheck(){
-		Log.d(TAG,"checking for collision");
+		//Log.d(TAG,"checking for collision");
 		//Log.d(TAG,"rectangle height/width "+player.rect.height+" "+player.rect.width);
 		
 		ArrayList<Bullet> tempBullets = player.getBullets();
@@ -107,7 +107,7 @@ public class Level extends HUD {
 		for(Enemy e : enemies) {
 			if (Rectangle.Intersects(player.rect, e.rect) && !e.isDead())
 				player.inflictDamage(e.damage);
-				Log.d(TAG,"collision detected!");
+				//Log.d(TAG,"collision detected!");
 				
 				//decrement health
 				healthBar.clear();
