@@ -28,16 +28,17 @@ public class Rectangle {
 	}
 
 
-	
-	public  boolean Intersects(Rectangle a, Rectangle b) {
-		Log.d(TAG,"player"+a.X+","+a.Y);
-		Log.d(TAG,"enemy"+b.X+","+b.Y);
-		if((a.X-b.X)<50)
-			if(a.Y-b.Y<50)
+
+	public static boolean Intersects(Rectangle a, Rectangle b) {
+		Log.d(TAG,"a: "+a.X+","+a.Y);
+		Log.d(TAG,"b: "+b.X+","+b.Y);
+		if(a.X <= b.X && a.X + a.width >= b.X || b.X <= a.X && b.X + b.width >= a.X) {
+			if(a.Y <= b.Y && a.Y + a.height >= b.Y || b.Y <= a.Y && b.Y + b.height >= a.Y)
 				return true;
+		}
 		return false;
 	}
-	
+
 
 	/*
 	public boolean Intersects(Rectangle a, Rectangle b) {

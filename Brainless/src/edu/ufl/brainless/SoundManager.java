@@ -13,11 +13,11 @@ import android.util.Log;
 public class SoundManager {
 	private static SoundManager _instance;
 	private static SoundPool soundPool;
-	private static HashMap<Integer, Integer> soundPoolMap;
+	private static HashMap<String, Integer> soundPoolMap;
 	private static AudioManager audioManager;
 	private static Context context;
 	private static MediaPlayer mediaPlayer;
-	private static HashMap<Integer, Uri> mediaPlayerMap;
+	private static HashMap<String, Uri> mediaPlayerMap;
 
 	private SoundManager()	{ }
 
@@ -30,14 +30,14 @@ public class SoundManager {
 	public static void initSounds(Context theContext) {
 		context = theContext;
 		soundPool = new SoundPool(8, AudioManager.STREAM_MUSIC, 0);
-		soundPoolMap = new HashMap<Integer, Integer>();
+		soundPoolMap = new HashMap<String, Integer>();
 		audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-		mediaPlayerMap = new HashMap<Integer, Uri>();
+		mediaPlayerMap = new HashMap<String, Uri>();
 	}
 
-	public static void addSound(int index, int soundID) {
+	public static void addSound(String index, int soundID) {
 		soundPoolMap.put(index, soundPool.load(context, soundID, 1));
 	}
 
@@ -45,8 +45,10 @@ public class SoundManager {
 	 * Adds short audio files to the soundPool map for use.
 	 */
 	public static void loadSounds() {
-		addSound(1, R.raw.pistol);
-		addSound(2, R.raw.submachine);
+		addSound("pistol", R.raw.pistol);
+		addSound("submachine", R.raw.submachine);
+		addSound("pistol_reload", R.raw.rifle_reload);
+		addSound("player_injured", R.raw.player_injured);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class SoundManager {
 	 * @param speed - used to control playback speed (0.5 = half, 2.0 = double)
 	 * @param isLooping - set to true if sound loops, otherwise use false for single sounds
 	 */
-	public static void playSound(int index, float speed, boolean isLooping)	{
+	public static void playSound(String index, float speed, boolean isLooping)	{
 		float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		streamVolume = streamVolume / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		if (isLooping)
@@ -73,7 +75,7 @@ public class SoundManager {
 	/**
 	 * Creates a Uri object used to identify files for MediaPlayer
 	 */
-	public static void addMedia(int index, String path) {
+	public static void addMedia(String index, String path) {
 		Uri media = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + path);
 		mediaPlayerMap.put(index, media);
 	}
@@ -82,7 +84,7 @@ public class SoundManager {
 	 * Adds longer audio files to mediaPlayer map for future use
 	 */
 	public static void loadMedia() {
-		addMedia(1, "test_theme");
+		addMedia("theme", "test_theme");
 	}	
 
 	/**
@@ -91,7 +93,7 @@ public class SoundManager {
 	 * 
 	 * @param index - the key of the desired audio file in the mediaPlayerMap
 	 */
-	public static void playMedia(int index) {
+	public static void playMedia(String index) {
 		try {
 			mediaPlayer.setDataSource(context, mediaPlayerMap.get(index));
 			mediaPlayer.prepare();

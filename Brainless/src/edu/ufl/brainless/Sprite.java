@@ -62,6 +62,8 @@ public class Sprite {
 	public void setCenter(Vector2 pos) {
 		position.X = pos.X - rect.width/2;
 		position.Y = pos.Y - rect.height/2;
+		rect.X = position.X;
+		rect.Y = position.Y;
 	}
 
 	// gets center position of sprite

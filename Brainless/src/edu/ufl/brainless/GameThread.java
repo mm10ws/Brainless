@@ -33,7 +33,7 @@ public class GameThread extends Thread {
 	public void run() {
 		long tickCount = 0L;
 		Log.d(TAG, "Starting game loop");
-		SoundManager.playMedia(1);
+		//SoundManager.playMedia("theme");
 		while (running) {			
 			Canvas c = null;
 			try {
@@ -68,5 +68,6 @@ public class GameThread extends Thread {
 		gamePanel.onDraw(canvas);
 		level.draw(canvas);
 		hud.draw(canvas);
+		hud.drawText(canvas, level.getPlayer());
 	}
 }

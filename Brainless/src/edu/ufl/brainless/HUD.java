@@ -26,7 +26,7 @@ public class HUD {
 
 	private float stickCenterX = 100;
 	private float stickCenterY = 375;
-	private float buttonCenterX = 600;
+	private float buttonCenterX = 700;
 	private float buttonCenterY = 375;
 
 	// Stick locations
@@ -162,9 +162,17 @@ public class HUD {
 	public void draw(Canvas canvas) {
 		stickBackground.draw(canvas);
 		stick.draw(canvas);
-
 		healthBar.draw(canvas);
-
 		button.draw(canvas);
+	}
+
+	public void drawText(Canvas canvas, Player player) {
+		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(Color.WHITE);
+		paint.setAntiAlias(true);
+		paint.setTextSize(24);
+		canvas.drawText("Clip: " + player.getWeapon().ammoInClip + "/" + player.getWeapon().constAmmoInClip, 600, 100, paint);
+		canvas.drawText("# Clips: " + player.getWeapon().numberOfClips, 600, 130, paint);
 	}
 }

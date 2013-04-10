@@ -26,10 +26,4 @@ public class Actor extends Sprite {
 		this.rect.X=position.X;
 		this.rect.Y=position.Y;
 	}
-
-	//level manager detected a collision
-		public void collision(Actor x){
-
-		}
-
 }
