@@ -1,6 +1,7 @@
 package edu.ufl.brainless;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import android.graphics.Bitmap;
@@ -19,7 +20,7 @@ public class Level extends HUD {
 	private static final String TAG = Level.class.getSimpleName();
 	private Vector2 direction = new Vector2(1,0);
 	//private Enemy enemy=new Enemy(ResourceManager.getBitmap(R.drawable.enemy),100f,200f,0f,direction,2f,100,25,false);
-	public int bites = 0;
+	public static int bites = 0;
 	private int zombieTimer = 0;
 	private int zombieInterval = 600;
 	private static Paint textPaint;
@@ -27,7 +28,13 @@ public class Level extends HUD {
 	private static final int COUNTDOWN = 1;
 	private static final int RUNNING = 2;
 	private static final int GAMEOVER = 3;
+	private static final int HEALTHPACK = 4;
 	private int mode = WAITING_FOR_SURFACE;
+	private ArrayList<Sprite> items;
+	private int healthTimer = 0;
+	private int healthInterval = 600;
+	Sprite ammo = new Sprite(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0);
+	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
 	public Player getPlayer() {
 		return player;
@@ -38,8 +45,15 @@ public class Level extends HUD {
 		player.setCenter(new Vector2(400, 240));
 		enemies= new ArrayList<Enemy>();
 		addZombie();
+		items = new ArrayList<Sprite>();
 	}
-
+	
+	public void addHealth(){
+		//Random rand = new Random();
+		Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
+		items.add(healthPack);
+	}
+	
 	public void addZombie() {
 		Random rnd = new Random();
 		int selection = rnd.nextInt(4);
@@ -77,6 +91,10 @@ public class Level extends HUD {
 			zombieTimer = 0;
 			addZombie();
 		}
+		if(++healthTimer >= healthInterval){
+			healthTimer = 0;
+			addHealth();
+		}
 
 		for(Enemy e : enemies) {
 			if (!e.isDead())
@@ -101,6 +119,23 @@ public class Level extends HUD {
 					e.inflictDamage(player.getWeapon().weaponDamage);
 					player.removeBullet(i);
 				}
+			}
+		}
+		boolean healthUsed = false;
+		for (Sprite s : items){
+			if (Rectangle.Intersects(player.rect, s.rect)&& bites != 0 && healthUsed != true){
+				bites--;
+				s.clear();
+				healthUsed = true;
+				//Level.draw(canvas);
+				//redraw the health bar to reflect the changes then DONE!!!!
+				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+				healthBar.clear();
+				//mode = HEALTHPACK;
+				restart();
+			}
+			else {
+				//do nothing
 			}
 		}
 
@@ -132,7 +167,7 @@ public class Level extends HUD {
 		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
 		player.setCenter(new Vector2(400, 240));
 		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
-		if (bites ==5){
+		if (bites >=5){
 			mode = GAMEOVER;
 		}
 	}
@@ -148,12 +183,16 @@ public class Level extends HUD {
 		//canvas.drawText("You reached level " + level, screenWidth / 2, (float) (screenHeight * 0.60), textPaint);
 		//canvas.drawText("Press 'Back' for Main Menu", screenWidth / 2, (float) (screenHeight * 0.85), textPaint);
 	}
+	
 
 	public void draw(Canvas canvas) {		
 		for (Enemy e : enemies)
 			e.draw(canvas);
+		for (Sprite s : items)
+			s.draw(canvas);
 		player.draw(canvas);
 		healthBar.draw(canvas);
+		ammo.draw(canvas);
 		if (mode == GAMEOVER){
 			Level.drawGameOverScreen(canvas, 500f, 900f);
 			//mode = WAITING_FOR_SURFACE;

@@ -1,6 +1,6 @@
 package edu.ufl.brainless;
 
-public class Item {
+public class Item  {
 	String itemName;
 
 	private static final String TAG = Item.class.getSimpleName();
