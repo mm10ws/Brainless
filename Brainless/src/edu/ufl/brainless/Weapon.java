@@ -119,7 +119,7 @@ public class Weapon extends Item {
 			return false;
 	}
 	
-	public void update() {
+	public void update(Vector2 playerPosition) {
 		if (attackTimer > 0) {
 			attackTimer--;
 			
@@ -133,7 +133,7 @@ public class Weapon extends Item {
 		
 		for(int i = bullets.size() - 1; i >= 0; i--) {
 			Bullet temp = bullets.get(i);
-			temp.update();
+			temp.update(playerPosition);
 			
 			// Check to see if bullet is off-screen, delete if it is
 			if (temp.position.X < -temp.rect.width || temp.position.X > 800 || temp.position.Y > 480 || temp.position.Y < -temp.rect.height)

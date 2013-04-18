@@ -55,6 +55,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		thread.addEventToHud(event);
+		Log.d(TAG, "Touch on " + event.getX() + " " + event.getY());
 		int action = event.getAction() & MotionEvent.ACTION_MASK;
 
 		switch (action) {

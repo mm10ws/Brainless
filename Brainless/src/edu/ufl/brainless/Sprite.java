@@ -20,8 +20,10 @@ public class Sprite {
 	// Vector2 that corresponds with top-left point of Sprite
 	public Vector2 position;
 	
+	
 	public Sprite() {
 		position = new Vector2(0,0);
+
 		rect = new Rectangle(position.X, position.Y, texture.getWidth(), texture.getHeight());
 		angle = 0;
 	}

@@ -16,12 +16,14 @@ public class Enemy extends Actor {
 		health = 100; //every enemy starts out with full health
 		isDead = false;
 		damage = 25;
+		calculateCameraPosition(Camera.playerPosition);
 	}
 	public Enemy(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed, int health, int damage, boolean isDead) {		
 		super(texture, x, y, angle, direction, speed);		
 		this.isDead = isDead;
 		this.health = health;
 		this.damage = damage;
+		calculateCameraPosition(Camera.playerPosition);
 	}
 	
 	public void update(Vector2 player){
@@ -30,6 +32,7 @@ public class Enemy extends Actor {
 		this.direction.Y=player.Y-this.position.Y;
 		direction.Normalize();
 		this.angle = (float)(Math.atan2(direction.Y, direction.X) * 180 / Math.PI);
+		cameraPosition = calculateCameraPosition(player);
 		//checkDirection(angle);
 
 		super.update();

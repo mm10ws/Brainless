@@ -38,6 +38,7 @@ public class Level extends HUD {
 		player.setCenter(new Vector2(400, 240));
 		enemies= new ArrayList<Enemy>();
 		addZombie();
+		Log.d(TAG, "Level created.");
 	}
 	
 	public void addZombie() {
@@ -72,19 +73,27 @@ public class Level extends HUD {
 	}
 	
 	public void update(HUD hud) {
-		player.update(hud);
-		if (++zombieTimer >= zombieInterval) {
-			zombieTimer = 0;
-			addZombie();
-		}
 			
-		for(Enemy e : enemies) {
-			if (!e.isDead())
-				e.update(player.position);
+		try{
+			player.update(hud);
+			
+			if (++zombieTimer >= zombieInterval) {
+				zombieTimer = 0;
+				addZombie();
+			}
+				
+			for(Enemy e : enemies) {
+				if (!e.isDead())
+					e.update(player.position);
+			}
+			collisionCheck();
+			if (player.isDead())
+				restart();		
 		}
-		collisionCheck();
-		if (player.isDead())
-			restart();		
+		catch(NullPointerException e)
+		{
+			Log.d(TAG, e.toString() + " in Level.update");
+		}
 	}
 	
 	public void collisionCheck(){
@@ -138,7 +147,7 @@ public class Level extends HUD {
 		//canvas.drawText("Press 'Back' for Main Menu", screenWidth / 2, (float) (screenHeight * 0.85), textPaint);
 	}
 	
-	public void draw(Canvas canvas) {		
+	public void draw(Canvas canvas) {	
 		for (Enemy e : enemies)
 			e.draw(canvas);
 		player.draw(canvas);

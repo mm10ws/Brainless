@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -21,7 +22,9 @@ public class Player extends Actor {
 		heldWeapon = new Weapon();
 		health = 100; // every player starts out with full health
 		isDead = false;
+		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
+		Log.d(TAG, "Player created.");
 	}
 	
 	public Player(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) { // default constructor
@@ -29,7 +32,9 @@ public class Player extends Actor {
 		heldWeapon = new Weapon();
 		health = 100; // every player starts out with full health
 		isDead = false;
+		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
+		Log.d(TAG, "Player created.");
 	}
 
 	public Player(Bitmap texture, float x, float y, float angle, float speed, int health, boolean isDead, Weapon weapon) {
@@ -37,7 +42,9 @@ public class Player extends Actor {
 		heldWeapon = weapon;
 		this.isDead = isDead;
 		this.health = health;
+		cameraPositionCalculate();
 		// TODO Auto-generated constructor stub
+		Log.d(TAG, "Player created.");
 	}
 	
 	// getters and setters
@@ -142,7 +149,7 @@ public class Player extends Actor {
 			heldWeapon.shoot(getCenter().X, getCenter().Y, angle, direction, speed);
 		}
 		
-		heldWeapon.update();
+		heldWeapon.update(position);
 	}
 	
 	public ArrayList<Bullet> getBullets() {
@@ -151,6 +158,10 @@ public class Player extends Actor {
 	
 	public void removeBullet(int index) {
 		heldWeapon.removeBullet(index);
+	}
+	
+	public void cameraPositionCalculate(){
+		cameraPosition = new Vector2(Camera.playerPosition.X, Camera.playerPosition.Y);
 	}
 	
 	@Override

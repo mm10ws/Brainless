@@ -45,7 +45,7 @@ public class GameThread extends Thread {
 				draw(c);
 			}
 			catch(IllegalArgumentException e) {
-				//Log.d(TAG, e.toString());
+				Log.d(TAG, e.toString());
 			}
 			finally {
 				surfaceHolder.unlockCanvasAndPost(c);
@@ -64,10 +64,16 @@ public class GameThread extends Thread {
 		hud.passEvent(null);
 	}
 
-	public void draw(Canvas canvas) {		
-		gamePanel.onDraw(canvas);
-		level.draw(canvas);
-		hud.draw(canvas);
-		hud.drawText(canvas, level.getPlayer());
+	public void draw(Canvas canvas) {	
+		try{	
+			gamePanel.onDraw(canvas);
+			level.draw(canvas);
+			hud.draw(canvas);
+			hud.drawText(canvas, level.getPlayer());
+		}
+		catch(NullPointerException e)
+		{
+			Log.d(TAG, e.toString() + " in GameThread.draw");
+		}
 	}
 }
