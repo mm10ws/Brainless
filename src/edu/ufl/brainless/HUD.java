@@ -36,6 +36,7 @@ public class HUD {
 	private Vector2 stickAngle = new Vector2(0,0);		// Angle of stick input.
 
 	private float buttonRadius;
+	private float reloadButtonRadius;
 
 	private int stickPointerId = -1;
 	private boolean[] buttonPointers = new boolean[10];
@@ -43,7 +44,7 @@ public class HUD {
 	public static final int MOVE = 2;
 	public static final int TILT = 1;
 	public static final int NEUTRAL = 0;
-	
+
 	public HUD() {
 		stick = new Sprite(ResourceManager.getBitmap(R.drawable.stick_foreground), 45, 355, 0);
 		stickBackground = new Sprite(ResourceManager.getBitmap(R.drawable.stick_background), 10, 320, 0);
@@ -55,11 +56,12 @@ public class HUD {
 
 		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar), 585, 15,0);
 
-		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
+		button = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_button), 10, 320, 0);
 		button.setCenter(new Vector2(buttonCenterX, buttonCenterY));
-		reloadButton = new Sprite(ResourceManager.getBitmap(R.drawable.shoot_1), 10, 320, 0);
+		reloadButton = new Sprite(ResourceManager.getBitmap(R.drawable.reload_button_t), 10, 320, 0);
 		reloadButton.setCenter(new Vector2(buttonCenterX - 300, buttonCenterY));
 		buttonRadius = button.rect.width;
+		reloadButtonRadius = reloadButton.rect.width;
 	}
 
 	public void passEvent(MotionEvent event) {
@@ -126,7 +128,7 @@ public class HUD {
 	private boolean isReloadPointerButtonInput(MotionEvent event, int pointerIndex) {
 		Vector2 eventVector = new Vector2(event.getX(pointerIndex), event.getY(pointerIndex));
 		boolean result = false;
-		if (Vector2.Distance(reloadButton.getCenter(), eventVector) <= buttonRadius) {
+		if (Vector2.Distance(reloadButton.getCenter(), eventVector) <= reloadButtonRadius) {
 			result = true;
 		}
 		return result;
@@ -150,7 +152,7 @@ public class HUD {
 		return result;
 	}
 
-	
+
 	public boolean isStickPressed() {
 		return stickPointerId > -1;
 	}
@@ -201,7 +203,7 @@ public class HUD {
 	public void resetHUD() {
 		stick.setCenter(stickBackground.getCenter());
 	}
-	
+
 	public int isPlayerMoving() {
 		int result = NEUTRAL;
 		if(isStickPressed()) {

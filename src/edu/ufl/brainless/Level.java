@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 
@@ -35,8 +36,14 @@ public class Level extends HUD {
 	private int healthTimer = 0;
 	private int healthInterval = 600;
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
+	Actor healthPack;
+	int i =1;
+	boolean healthUsed = false;
+	boolean ammoUsed = false;
+	//Sprite healthPack;
+	//Actor healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0, new Vector2(0,0), 0);
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
-
+	
 	public Player getPlayer() {
 		return player;
 	}
@@ -49,14 +56,29 @@ public class Level extends HUD {
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
 		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
+		//items.add(healthPack);
+		//player.setHealth(50);
+		Log.d(TAG,"currHealth " + player.getHealth());
 	}
 	
 	public void addHealth(){
-		//Random rand = new Random();
+		Random rand = new Random();
 		//public Actor(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) {
 		Vector2 newVector = new Vector2(0,0);
-		Actor healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f, 0, newVector, 0);
+		healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f, 0, newVector, 0);
 		items.add(healthPack);
+		healthUsed = false;
+		Actor ammo1 = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
+		ammunitions.add(ammo1);
+		ammoUsed = false;
+		int select = rand.nextInt(100);
+		addHealth(select);
+	}
+	public void addHealth(int select){
+		if (select ==3){
+			addHealth();
+		}
+		
 	}
 	
 	public void addZombie() {
@@ -68,7 +90,7 @@ public class Level extends HUD {
 	// adds zombie to spawn from off the screen, 0 = top, 1 = right, 2 = down, 3 = left
 	public void addZombie(int selection) {
 		Random rnd = new Random();
-		Enemy temp = new Enemy(ResourceManager.getBitmap(R.drawable.zombie),0,0,0f,direction,2f,100,25,false);
+		Enemy temp = new Enemy(ResourceManager.getBitmap(R.drawable.zombie),0,0,0f,direction,1f,100,25,false);
 		Vector2 tempPos = new Vector2(0,0);
 		if (selection == 0) { // top
 			tempPos.X = rnd.nextInt(800-(int)temp.rect.width) + temp.rect.width/2;
@@ -123,7 +145,7 @@ public class Level extends HUD {
 
 		ArrayList<Bullet> tempBullets = player.getBullets();
 
-
+		
 		// check bullet collisions
 		for(int i = tempBullets.size() - 1; i >= 0; i--) {
 			for(Enemy e : enemies) {
@@ -133,27 +155,84 @@ public class Level extends HUD {
 				}
 			}
 		}
-		boolean healthUsed = false;
-		for (Actor s : items){
-			if (Rectangle.Intersects(player.rect, s.rect) && player.getHealth() != 100 && healthUsed != true){
-				s.clear();
+		
+		//boolean healthUsed = false;
+		
+		for (int x = 0; x <items.size(); x++){
+			if (Rectangle.Intersects(player.rect, items.get(x).rect) && player.getHealth() != 100 && healthUsed !=true){
+				items.get(x).clear();
+				bites--;
+				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+				int currHealth = player.getHealth();
+				//currHealth +=25;
+				healthUsed =true;
+				for (int y =1; y <=1; y++){
+					currHealth +=25;
+				}
+				player.setHealth(currHealth);
+				Log.d(TAG,"healthtouched " + player.getHealth());
+			}
+			/*
+			if (Rectangle.Intersects(player.rect, items.get(x).rect) && player.getHealth() <= 75 && healthUsed != true){
+				items.get(x).clear();
+				bites--;
+				int currHealth = player.getHealth();
+				player.setHealth(currHealth+25);
 				healthUsed = true;
-				//Level.draw(canvas);
-				//redraw the health bar to reflect the changes then DONE!!!!
-				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()), 585, 15,0);
-				//healthBar.clear();
-				//healthBar.draw(canvas);
+				items.remove(items.get(x));
+				Log.d(TAG,"healthConsumed " + player.getHealth());
+			}
+			*/
+			else {
+				//do nothing
+			}
+			
+		}
+		
+		/*
+		for (Actor s : items){
+			
+			if (Rectangle.Intersects(player.rect, s.rect)){
+				s.clear();
+				bites--;
+				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+				int currHealth = player.getHealth();
+				//currHealth +=25;
+				for (; i <=1; i++){
+					currHealth +=25;
+				}
+				player.setHealth(currHealth);
+				Log.d(TAG,"healthtouched " + player.getHealth());
+			}
+			
+			if (Rectangle.Intersects(player.rect, s.rect) && player.getHealth() <= 75 && healthUsed != true){
+				s.clear();
+				bites--;
+				int currHealth = player.getHealth();
+				player.setHealth(currHealth+25);
+				healthUsed = true;
 				items.remove(s);
-				//mode = HEALTHPACK;
-				//restart();
+				Log.d(TAG,"healthConsumed " + player.getHealth());
 			}
 			else {
 				//do nothing
 			}
 		}
-		boolean ammoUsed = false;
+		*/
+		//boolean ammoUsed = false;
+		for (int i =0; i <ammunitions.size(); i++){
+			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && ammoUsed != true){
+				ammunitions.get(i).clear();
+				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+3);
+				player.getWeapon().setAmmoRemaining(player.getWeapon().getNumberOfClips()*8);
+				ammoUsed = true;
+				ammunitions.remove(ammunitions.get(i));
+				//restart();
+			}
+		}
+		/*
 		for (Actor a : ammunitions){
-			if(Rectangle.Intersects(player.rect, a.rect) && healthUsed != true){
+			if(Rectangle.Intersects(player.rect, a.rect) && ammoUsed != true){
 				a.clear();
 				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+1);
 				ammoUsed = true;
@@ -161,15 +240,18 @@ public class Level extends HUD {
 				//restart();
 			}
 		}
+		*/
 
 		for(Enemy e : enemies) {
 			if (Rectangle.Intersects(player.rect, e.rect) && !e.isDead()){
 				player.inflictDamage(e.damage);
 				//Log.d(TAG,"collision detected!");
-				//bites++;
+				bites++;
 				//decrement health
 				healthBar.clear();
+				healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
 				player.isShoved(e);
+				restart();
 			}
 		}
 	}
@@ -195,10 +277,13 @@ public class Level extends HUD {
 	// restart the game
 	public void restart(){
 		//Log.d(TAG,"restart" + bites);
-		enemies.clear();
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
-		player.setCenter(new Vector2(400, 240));
+		//enemies.clear();
+		int health = player.getHealth();
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, health, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
+		player.setCenter(getPlayerDirection());
+		//player.setCenter(new Vector2(400, 240));
 		healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
+		Log.d(TAG,"restartHealth" + player.getHealth());
 		if (bites >=5){
 			mode = GAMEOVER;
 		}
@@ -223,10 +308,24 @@ public class Level extends HUD {
 	
 
 	public void draw(Canvas canvas) {		
-		for (Enemy e : enemies)
+		for (Enemy e : enemies){
 			e.draw(canvas);
-		for (Sprite s : items)
+			if (Rectangle.Intersects(player.rect, e.rect)){
+				healthBar.draw(canvas);
+			}
+		}
+		for (int x = 0; x < items.size(); x++){
+			items.get(x).draw(canvas);
+			healthBar.draw(canvas);
+		}
+		for (int y =0; y<ammunitions.size();y++){
+			ammunitions.get(y).draw(canvas);
+		}
+		/*
+		for (Actor s : items)
 			s.draw(canvas);
+			healthBar.draw(canvas);
+		*/
 		player.draw(canvas);
 		healthBar.draw(canvas);
 		ammo.draw(canvas);
@@ -234,6 +333,18 @@ public class Level extends HUD {
 			Level.drawGameOverScreen(canvas, 500f, 900f);
 			//mode = WAITING_FOR_SURFACE;
 			bites = 0;
+				boolean loop = true;
+				while(loop) {
+					try{
+						synchronized(this){
+							wait(5000);
+						}
+					}
+					catch (InterruptedException ex){
+						Log.d(TAG, ex.toString());
+					}	
+					loop = false;
+				}
 		}
 	}
 }
