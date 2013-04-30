@@ -60,7 +60,7 @@ public class Level {
 	}
 
 	public Level(GameThread thread, HUD hud) {
-		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new Weapon("Pistol", 8, 3, 90, 25, 8));
 		player.setCenter(new Vector2(400, 240));
 		enemies= new ArrayList<Enemy>();
 		addZombie();
