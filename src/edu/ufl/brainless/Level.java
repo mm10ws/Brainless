@@ -40,14 +40,19 @@ public class Level {
 	private static int mode = WAITING_FOR_SURFACE;
 	private ArrayList<Actor> items;
 	private ArrayList<Actor> ammunitions;
+	private ArrayList<Actor> guns;
 	private int healthTimer = 0;
 	private int healthInterval = 600;
 	private int zombieTimer2 =0;
 	private int zombieInterval2 = 200;
 	private int counter = 0;
+	boolean gunUsed = false;
+	boolean ammoUsed = false;
 	private static float zombieSpeed = 2f;
 	private static float bigZombieSpeed = .75f;
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
+	Actor gun1 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 375f, 0, new Vector2(0,0), 0); //machine gun
+	Actor gun2 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 175f, 0, new Vector2(0,0), 0); //shotgun
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
 	public Player getPlayer() {
@@ -62,7 +67,8 @@ public class Level {
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
 		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
-		
+		guns = new ArrayList<Actor>();
+		guns.add(gun1);
 		this.thread = thread;
 		this.hud = hud;
 	}
@@ -198,6 +204,9 @@ public class Level {
 		for(int i = ammunitions.size()-1; i>= 0;i--){
 			ammunitions.get(i).update(player.position);
 		}
+		for(int i = guns.size() -1; i >= 0; i--){
+			guns.get(i).update(player.position);
+		}
 		if (player.isDead()){
 			//restart();
 			gameOver();
@@ -241,7 +250,27 @@ public class Level {
 				//do nothing
 			}
 		}
-		boolean ammoUsed = false;
+		for (int i = ammunitions.size() - 1; i >= 0; i--){
+			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && ammoUsed != true){
+				ammunitions.get(i).clear();
+				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+1);
+				this.ammoUsed = true;
+				ammunitions.remove(ammunitions.get(i));
+				//restart();
+			}
+		}
+
+		for (int i = guns.size() - 1; i >= 0; i--){
+			if(Rectangle.Intersects(player.rect, guns.get(i).rect) && gunUsed != true){
+				guns.get(i).clear();
+				player.setWeapon(new MachineGun());
+				this.gunUsed = true;
+				guns.remove(guns.get(i));
+				//restart();
+			}
+		}
+		/*
+		//boolean ammoUsed = false;
 		for (int i = ammunitions.size() - 1; i >= 0; i--){
 			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && healthUsed != true){
 				ammunitions.get(i).clear();
@@ -251,6 +280,7 @@ public class Level {
 				//restart();
 			}
 		}
+		*/
 
 		for(int i = enemies.size() - 1; i >= 0; i--) {
 			if (Rectangle.Intersects(player.rect, enemies.get(i).rect) && !enemies.get(i).isDead()){
@@ -332,6 +362,7 @@ public class Level {
 		player.draw(canvas);
 		hud.healthBar.draw(canvas);
 		ammo.draw(canvas);
+		gun1.draw(canvas);
 		if (mode == GAMEOVER){
 			Level.drawGameOverScreen(canvas, 500f, 900f);
 			//mode = WAITING_FOR_SURFACE;
