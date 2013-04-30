@@ -139,12 +139,12 @@ public class Player extends Actor {
 		// Check if player is outside of screen
 		if (position.X < 0)
 			position.X = 0;
-		else if (position.X > 800 - rect.width)
-			position.X = 800 - rect.width;
+		else if (position.X > Camera.MAXPLAYERX - rect.width)
+			position.X = Camera.MAXPLAYERX - rect.width;
 		if (position.Y < 0)
 			position.Y = 0;
-		else if (position.Y > 480 - rect.height)
-			position.Y = 480 - rect.height;
+		else if (position.Y > Camera.MAXPLAYERY - rect.height)
+			position.Y = Camera.MAXPLAYERY - rect.height;
 
 		// Check if player fired weapon
 		if (hud.isButtonPressed()) {

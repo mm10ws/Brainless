@@ -42,18 +42,28 @@ public class Level {
 	private ArrayList<Actor> ammunitions;
 	private ArrayList<Actor> guns;
 	private int healthTimer = 0;
-	private int healthInterval = 600;
+	private int healthInterval = 100;
+	private int ammoTimer = 0;
+	private int ammoInterval = 100;
 	private int zombieTimer2 =0;
 	private int zombieInterval2 = 200;
-	private int counter = 0;
+	private int healthCounter = 0;
+	private int ammoCounter = 0;
 	boolean gunUsed = false;
-	boolean ammoUsed = false;
+	//boolean ammoUsed = false;
 	private static float zombieSpeed = 2f;
 	private static float bigZombieSpeed = .75f;
-	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
+	//Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
 	Actor gun1 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 375f, 0, new Vector2(0,0), 0); //machine gun
 	Actor gun2 = new Actor(ResourceManager.getBitmap(R.drawable.gun5), 200f, 175f, 0, new Vector2(0,0), 0); //shotgun
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
+	
+	//scoring stuff
+	private static final int FRAMESPERPOINT = 15;
+	private static final int TIMERPOINTSINCREMENT = 5;
+	private static final int POINTSPERZOMBIE = 1000;
+	private int timer = 0;
+	private int timerPoints = 0;
 
 	public Player getPlayer() {
 		return player;
@@ -66,7 +76,7 @@ public class Level {
 		addZombie();
 		items = new ArrayList<Actor>();
 		ammunitions = new ArrayList<Actor>();
-		ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
+		//ammunitions.add(ammo); //this makes it into a healthpack. but then it moves.
 		guns = new ArrayList<Actor>();
 		guns.add(gun1);
 		this.thread = thread;
@@ -110,9 +120,23 @@ public class Level {
 	public void addHealth(){
 		//Random rand = new Random();
 		//public Actor(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) {
+		Random rnd = new Random();
+		int x = rnd.nextInt(400) + 200;
+		int y = rnd.nextInt(400) + 200;
 		Vector2 newVector = new Vector2(0,0);
-		Actor healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f, 0, newVector, 0);
+		Actor healthPack = new Actor(ResourceManager.getBitmap(R.drawable.health_pack), x, y, 0, newVector, 0);
 		items.add(healthPack);
+	}
+	
+	public void addAmmo(){
+		//Random rand = new Random();
+		//public Actor(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) {
+		Random rnd = new Random();
+		int x = rnd.nextInt(400) + 200;
+		int y = rnd.nextInt(400) + 200;
+		Vector2 newVector = new Vector2(0,0);
+		Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), x, y, 0, newVector, 0);
+		ammunitions.add(ammo);
 	}
 
 	public void addZombie() {
@@ -147,6 +171,12 @@ public class Level {
 			temp.setCenter(tempPos);
 			enemies.add(temp);
 		}
+	}
+	
+	private void sendPoints()
+	{
+		int points = (Enemy.numberKilled * POINTSPERZOMBIE) + timerPoints;
+		hud.points = points;
 	}
 
 	// adds zombie to spawn from off the screen, 0 = top, 1 = right, 2 = down, 3 = left
@@ -187,11 +217,17 @@ public class Level {
 			addBigZombie(select2);
 			Log.d(TAG,"Big Zombie Number" + select2);
 		}
-		if(++healthTimer >= healthInterval && counter <1){
+		if(++healthTimer >= healthInterval && healthCounter <1){
 			Log.d(TAG,"Health Timer");
 			healthTimer = 0;
-			counter++;
+			healthCounter++;
 			addHealth();
+		}
+		if(++ammoTimer >= ammoInterval && ammoCounter <1){
+			Log.d(TAG,"Ammo Timer");
+			ammoTimer = 0;
+			ammoCounter++;
+			addAmmo();
 		}
 
 		for(int i = enemies.size()-1; i>= 0;i--) {
@@ -211,6 +247,14 @@ public class Level {
 			//restart();
 			gameOver();
 		}
+		
+		if(timer >= FRAMESPERPOINT)
+		{
+			timerPoints += TIMERPOINTSINCREMENT;
+			timer = 0;
+		}
+		sendPoints();
+		timer++;
 	}
 
 	public void collisionCheck(){
@@ -243,6 +287,7 @@ public class Level {
 				items.remove(items.get(i));
 				player.addHealth(50);
 				hud.healthBar.LoadBitmap(ResourceManager.getBitmap(R.drawable.health_bar + getHealthBarName()));
+				healthCounter--;
 				//mode = HEALTHPACK;
 				//restart();
 			}
@@ -250,12 +295,14 @@ public class Level {
 				//do nothing
 			}
 		}
+		boolean ammoUsed = false;
 		for (int i = ammunitions.size() - 1; i >= 0; i--){
 			if(Rectangle.Intersects(player.rect, ammunitions.get(i).rect) && ammoUsed != true){
 				ammunitions.get(i).clear();
 				player.getWeapon().setNumberOfClips(player.getWeapon().getNumberOfClips()+1);
-				this.ammoUsed = true;
+				ammoUsed = true;
 				ammunitions.remove(ammunitions.get(i));
+				ammoCounter--;
 				//restart();
 			}
 		}
@@ -355,13 +402,15 @@ public class Level {
 	public void draw(Canvas canvas) {
 		Rect dst = new Rect(0,0,900,520);
 		canvas.drawBitmap(ResourceManager.getBitmap(R.drawable.tilebackground), bgOffset(), dst, null);
-		for (int i = enemies.size() - 1; i >= 0; i--)
+		for (int i = 0; i < enemies.size(); i++)
 			enemies.get(i).draw(canvas);
 		for (int i = items.size() - 1; i >= 0; i--)
 			items.get(i).draw(canvas);
-		player.draw(canvas);
-		hud.healthBar.draw(canvas);
-		ammo.draw(canvas);
+		for (int i = ammunitions.size() - 1; i >= 0; i--)
+			ammunitions.get(i).draw(canvas);
+			
+		player.draw(canvas);		
+		hud.healthBar.draw(canvas);		
 		gun1.draw(canvas);
 		if (mode == GAMEOVER){
 			Level.drawGameOverScreen(canvas, 500f, 900f);

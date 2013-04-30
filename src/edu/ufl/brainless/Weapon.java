@@ -136,7 +136,7 @@ public class Weapon extends Item {
 			temp.update(playerPosition);
 
 			// Check to see if bullet is off-screen, delete if it is
-			if (temp.position.X < -temp.rect.width || temp.position.X > 800 || temp.position.Y > 480 || temp.position.Y < -temp.rect.height)
+			if (temp.position.X < -temp.rect.width || temp.position.X > Camera.MAXPLAYERX || temp.position.Y > Camera.MAXPLAYERY || temp.position.Y < -temp.rect.height)
 				bullets.remove(temp);
 		}
 	}

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -44,6 +45,11 @@ public class HUD {
 	public static final int MOVE = 2;
 	public static final int TILT = 1;
 	public static final int NEUTRAL = 0;
+	
+	public int points;
+	private static final int POINTSXPOSITION = 20;
+	private static final int POINTSYPOSITION = 20;
+	private static final int POINTSDIGITS = 10;
 	
 	public HUD() {
 		stick = new Sprite(ResourceManager.getBitmap(R.drawable.stick_foreground), 45, 355, 0);
@@ -230,6 +236,23 @@ public class HUD {
 		button.draw(canvas);
 		reloadButton.draw(canvas);
 	}
+	
+	private void drawPoints(Canvas canvas)
+	{
+		Paint paint = new Paint();
+		paint.setStyle(Paint.Style.FILL);
+		paint.setColor(Color.WHITE);
+		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setAntiAlias(true);
+		paint.setTextSize(24);
+		paint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+		String pointText = Integer.toString(points);
+		while(pointText.length() < POINTSDIGITS)
+		{
+			pointText = '0' + pointText;
+		}
+		canvas.drawText(pointText, POINTSXPOSITION, POINTSYPOSITION, paint);
+	}
 
 	public void drawText(Canvas canvas, Player player) {
 		Paint paint = new Paint();
@@ -239,6 +262,7 @@ public class HUD {
 		paint.setTextSize(24);
 		canvas.drawText("Clip: " + player.getWeapon().ammoInClip + "/" + player.getWeapon().constAmmoInClip, 600, 100, paint);
 		canvas.drawText("# Clips: " + player.getWeapon().numberOfClips, 600, 130, paint);
-		canvas.drawText("# Killed: " + Enemy.numberKilled, 600, 160, paint);
+		drawPoints(canvas);
+		//canvas.drawText("# Killed: " + Enemy.numberKilled, 600, 160, paint);
 	}
 }
