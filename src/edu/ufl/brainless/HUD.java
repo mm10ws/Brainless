@@ -239,5 +239,6 @@ public class HUD {
 		paint.setTextSize(24);
 		canvas.drawText("Clip: " + player.getWeapon().ammoInClip + "/" + player.getWeapon().constAmmoInClip, 600, 100, paint);
 		canvas.drawText("# Clips: " + player.getWeapon().numberOfClips, 600, 130, paint);
+		canvas.drawText("# Killed: " + Enemy.numberKilled, 600, 160, paint);
 	}
 }
