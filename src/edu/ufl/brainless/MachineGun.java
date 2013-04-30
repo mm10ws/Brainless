@@ -8,7 +8,7 @@ import android.util.Log;
 public class MachineGun extends Weapon{
 	
 	public MachineGun(){
-		super("Machine Gun", 30, 10, 90, 50, 15);
+		super("Machine Gun", 30, 25, 90, 50, 15);
 	}
 	
 	public boolean shoot(float x, float y, float angle, Vector2 direction,

@@ -2,6 +2,7 @@ package edu.ufl.brainless;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
  * The GameActivity class is the main activity for Brainless. It gets and loads
  */
 public class GameActivity extends Activity {
+	public Intent intent = getIntent();
 
 	private static final String TAG = GameActivity.class.getSimpleName();
 
@@ -60,5 +62,9 @@ public class GameActivity extends Activity {
     	SoundManager.resetMedia();
     	SoundManager.cleanup();
         super.onStop();
+    }
+    public static void nextPass(Context c){
+    	Intent it = new Intent(c,GameActivity.class);
+    	c.startActivity(it);
     }
 }

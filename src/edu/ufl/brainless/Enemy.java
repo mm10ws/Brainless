@@ -8,6 +8,7 @@ public class Enemy extends Actor {
 	public boolean isDead;
 	public int damage;
 	public int knockback;
+	public static int numberKilled = 0;
 
 	private static final String TAG = Enemy.class.getSimpleName();
 
@@ -95,8 +96,21 @@ public class Enemy extends Actor {
 
 	public void death(){
 		if (this.isDead()){
-			super.LoadBitmap(ResourceManager.getBitmap(R.drawable.zombie_dead));
+			if (this.damage >=30){
+				super.LoadBitmap(ResourceManager.getBitmap(R.drawable.bigzombie_dead));	
+				numberKilled+=3;
+				Level.difficulty();
+				Log.d(TAG,"Number Killed: " + numberKilled);
+			}else{
+				super.LoadBitmap(ResourceManager.getBitmap(R.drawable.zombie_dead));
+				numberKilled++;
+				Level.difficulty();
+				Log.d(TAG,"Number Killed: " + numberKilled);
+			}
 		}		
+	}
+	public static void setNumberKilled(int num){
+		numberKilled = num;
 	}
 
 }

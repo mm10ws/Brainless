@@ -10,8 +10,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.WindowManager;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 
@@ -25,18 +30,23 @@ public class Level {
 	//private Enemy enemy=new Enemy(ResourceManager.getBitmap(R.drawable.enemy),100f,200f,0f,direction,2f,100,25,false);
 	public static int bites = 0; //non-static in jonthan's code
 	private int zombieTimer = 0;
-	private int zombieInterval = 600;
+	private int zombieInterval = 200;
 	private static Paint textPaint;
 	private static final int WAITING_FOR_SURFACE = 0;
 	private static final int COUNTDOWN = 1;
 	private static final int RUNNING = 2;
 	private static final int GAMEOVER = 3;
 	private static final int HEALTHPACK = 4;
-	private int mode = WAITING_FOR_SURFACE;
+	private static int mode = WAITING_FOR_SURFACE;
 	private ArrayList<Actor> items;
 	private ArrayList<Actor> ammunitions;
 	private int healthTimer = 0;
 	private int healthInterval = 600;
+	private int zombieTimer2 =0;
+	private int zombieInterval2 = 200;
+	private int counter = 0;
+	private static float zombieSpeed = 2f;
+	private static float bigZombieSpeed = .75f;
 	Actor ammo = new Actor(ResourceManager.getBitmap(R.drawable.ammo), 200f, 275f, 0, new Vector2(0,0), 0);
 	//Sprite healthPack = new Sprite(ResourceManager.getBitmap(R.drawable.health_pack), 100f,200f,0);
 
@@ -56,7 +66,41 @@ public class Level {
 		this.thread = thread;
 		this.hud = hud;
 	}
-
+	
+	public static void difficulty(){
+		//Every 20 kills make the game progressively harder.
+		if (Enemy.numberKilled == 0){
+			zombieSpeed =2f;
+			bigZombieSpeed =.75f;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+		if (Enemy.numberKilled%20 == 0){
+			zombieSpeed *=1.5;
+			bigZombieSpeed *=1.5;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+		if (Enemy.numberKilled%40 == 0){
+			zombieSpeed *=1.5;
+			bigZombieSpeed *=2.5;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+		if (Enemy.numberKilled%60 == 0){
+			zombieSpeed *=1.15;
+			bigZombieSpeed *=1.5;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+		if (Enemy.numberKilled%80 == 0){
+			zombieSpeed *=1.05;
+			bigZombieSpeed *=1.5;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+		if (Enemy.numberKilled%100 == 0){
+			zombieSpeed *=1.05;
+			bigZombieSpeed *=1.5;
+			Log.d(TAG,"Zombie Speed: " + zombieSpeed + " Big Zombie Speed: " + bigZombieSpeed);
+		}
+	}
+	
 	public void addHealth(){
 		//Random rand = new Random();
 		//public Actor(Bitmap texture, float x, float y, float angle, Vector2 direction, float speed) {
@@ -68,29 +112,57 @@ public class Level {
 	public void addZombie() {
 		Random rnd = new Random();
 		int selection = rnd.nextInt(4);
-		addZombie(selection);			
+		addZombie(selection);
+		int select = rnd.nextInt(10);
+		addBigZombie(select);
+	}
+	public void addBigZombie(int select){
+		Random rnd = new Random();
+		Enemy temp = new Enemy(ResourceManager.getBitmap(R.drawable.bigzombie),0,0,0f,direction,bigZombieSpeed,200,50,false);
+		Vector2 tempPos = new Vector2(0,0);
+		if (select == 7){
+			int select2 = rnd.nextInt(4);
+			if (select2 == 0) { // top
+				tempPos.X = rnd.nextInt(900-(int)temp.rect.width) + temp.rect.width/2;
+				tempPos.Y = -temp.rect.height/2;
+			}
+			else if (select2 == 1) { // right
+				tempPos.X = 800 + temp.rect.width/2;
+				tempPos.Y = rnd.nextInt(580-(int)temp.rect.height) + temp.rect.height/2;
+			}
+			else if (select2 == 2) { // down
+				tempPos.X = rnd.nextInt(900-(int)temp.rect.width) + temp.rect.width/2;
+				tempPos.Y = 900 + temp.rect.height/2;
+			}
+			else if (select2 == 3) { // left
+				tempPos.X = -temp.rect.width/2;
+				tempPos.Y = rnd.nextInt(580-(int)temp.rect.height) + temp.rect.height/2;
+			}
+			temp.setCenter(tempPos);
+			enemies.add(temp);
+		}
 	}
 
 	// adds zombie to spawn from off the screen, 0 = top, 1 = right, 2 = down, 3 = left
 	public void addZombie(int selection) {
 		Random rnd = new Random();
-		Enemy temp = new Enemy(ResourceManager.getBitmap(R.drawable.zombie),0,0,0f,direction,2f,100,25,false);
+		Enemy temp = new Enemy(ResourceManager.getBitmap(R.drawable.zombie),0,0,0f,direction,zombieSpeed,100,25,false);
 		Vector2 tempPos = new Vector2(0,0);
 		if (selection == 0) { // top
-			tempPos.X = rnd.nextInt(800-(int)temp.rect.width) + temp.rect.width/2;
+			tempPos.X = rnd.nextInt(900-(int)temp.rect.width) + temp.rect.width/2;
 			tempPos.Y = -temp.rect.height/2;
 		}
 		else if (selection == 1) { // right
-			tempPos.X = 800 + temp.rect.width/2;
-			tempPos.Y = rnd.nextInt(480-(int)temp.rect.height) + temp.rect.height/2;
+			tempPos.X = 900 + temp.rect.width/2;
+			tempPos.Y = rnd.nextInt(580-(int)temp.rect.height) + temp.rect.height/2;
 		}
 		else if (selection == 2) { // down
-			tempPos.X = rnd.nextInt(800-(int)temp.rect.width) + temp.rect.width/2;
-			tempPos.Y = 800 + temp.rect.height/2;
+			tempPos.X = rnd.nextInt(900-(int)temp.rect.width) + temp.rect.width/2;
+			tempPos.Y = 900 + temp.rect.height/2;
 		}
 		else if (selection == 3) { // left
 			tempPos.X = -temp.rect.width/2;
-			tempPos.Y = rnd.nextInt(480-(int)temp.rect.height) + temp.rect.height/2;
+			tempPos.Y = rnd.nextInt(580-(int)temp.rect.height) + temp.rect.height/2;
 		}
 		temp.setCenter(tempPos);
 		enemies.add(temp);
@@ -102,8 +174,17 @@ public class Level {
 			zombieTimer = 0;
 			addZombie();
 		}
-		if(++healthTimer >= healthInterval){
+		if (++zombieTimer2 >= zombieInterval2){
+			Random rand = new Random();
+			int select2 = rand.nextInt(10);
+			zombieTimer2 = 0;
+			addBigZombie(select2);
+			Log.d(TAG,"Big Zombie Number" + select2);
+		}
+		if(++healthTimer >= healthInterval && counter <1){
+			Log.d(TAG,"Health Timer");
 			healthTimer = 0;
+			counter++;
 			addHealth();
 		}
 
@@ -128,7 +209,7 @@ public class Level {
 		//Log.d(TAG,"rectangle height/width "+player.rect.height+" "+player.rect.width);
 
 		ArrayList<Bullet> tempBullets = player.getBullets();
-
+		
 
 		// check bullet collisions
 		for(int j = enemies.size() - 1; j >= 0; j--) {
@@ -229,6 +310,10 @@ public class Level {
 		textPaint.setTextSize(25);
 		//canvas.drawText("You reached level " + level, screenWidth / 2, (float) (screenHeight * 0.60), textPaint);
 		//canvas.drawText("Press 'Back' for Main Menu", screenWidth / 2, (float) (screenHeight * 0.85), textPaint);
+		if (mode == RUNNING){
+			canvas.restore();
+			
+		}
 	}
 	
 	private Rect bgOffset()
@@ -237,8 +322,8 @@ public class Level {
 		return result;
 	}
 
-	public void draw(Canvas canvas) {	
-		Rect dst = new Rect(0,0,800,480);
+	public void draw(Canvas canvas) {
+		Rect dst = new Rect(0,0,900,520);
 		canvas.drawBitmap(ResourceManager.getBitmap(R.drawable.tilebackground), bgOffset(), dst, null);
 		for (int i = enemies.size() - 1; i >= 0; i--)
 			enemies.get(i).draw(canvas);
@@ -251,6 +336,19 @@ public class Level {
 			Level.drawGameOverScreen(canvas, 500f, 900f);
 			//mode = WAITING_FOR_SURFACE;
 			bites = 0;
+			mode = RUNNING;
+			//Intent myIntent = new Intent(CurrentActivity.this, GameActivity.class);
+			//CurrentActivity.this.startActivity(myIntent);
+			Level.drawGameOverScreen(canvas, 500f, 900f);
+			tryAgain();
 		}
+	}
+	
+	public void tryAgain(){
+		enemies.clear();
+		Enemy.setNumberKilled(0);
+		player = new Player(ResourceManager.getBitmap(R.drawable.player), 0, 0, 0f, 5f, 100, false, new MachineGun());
+		player.setCenter(new Vector2(400, 240));
+		hud.healthBar = new Sprite(ResourceManager.getBitmap(R.drawable.health_bar + bites), 585, 15,0);
 	}
 }
